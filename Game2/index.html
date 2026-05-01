@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>2048 星核方阵</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell" id="app">
+      <section class="screen menu-screen" id="menuScreen" aria-labelledby="menuTitle">
+        <div class="menu-hero">
+          <p class="eyebrow">Game2 / 2048</p>
+          <h1 id="menuTitle">2048 星核方阵</h1>
+          <p class="hero-copy">选择玩家，点亮方块，冲进排行榜。</p>
+          <div class="hero-actions">
+            <button class="primary-button" id="startButton" type="button">开始游戏</button>
+            <button class="ghost-button" id="quickPlayerButton" type="button">新建玩家</button>
+          </div>
+        </div>
+
+        <div class="menu-grid">
+          <section class="panel player-panel" aria-labelledby="playerTitle">
+            <div class="panel-heading">
+              <p class="eyebrow">Player</p>
+              <h2 id="playerTitle">游戏用户选择</h2>
+            </div>
+            <div class="player-list" id="playerList"></div>
+            <form class="player-form" id="playerForm" autocomplete="off">
+              <input
+                id="playerNameInput"
+                name="playerName"
+                maxlength="12"
+                placeholder="输入玩家名"
+                aria-label="输入玩家名"
+              />
+              <button type="submit" class="icon-button text-icon" aria-label="添加玩家">+</button>
+            </form>
+          </section>
+
+          <section class="panel leaderboard-panel" aria-labelledby="menuRankTitle">
+            <div class="panel-heading">
+              <p class="eyebrow">Rank</p>
+              <h2 id="menuRankTitle">游戏排行榜</h2>
+            </div>
+            <div class="rank-list" id="menuLeaderboard"></div>
+          </section>
+
+          <section class="panel music-panel" aria-labelledby="musicTitle">
+            <div class="panel-heading">
+              <p class="eyebrow">Audio</p>
+              <h2 id="musicTitle">游戏音乐</h2>
+            </div>
+            <div class="music-controls">
+              <button class="toggle-button" id="menuMusicToggle" type="button" aria-pressed="true">
+                <span class="button-symbol">♪</span>
+                <span>背景音乐</span>
+              </button>
+              <label class="range-row">
+                <span>音量</span>
+                <input id="volumeSlider" type="range" min="0" max="100" value="38" />
+              </label>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen game-screen hidden" id="gameScreen" aria-labelledby="gameTitle">
+        <header class="game-header">
+          <div>
+            <p class="eyebrow">Active Player</p>
+            <h1 id="gameTitle">2048 星核方阵</h1>
+            <p class="current-player" id="currentPlayerLabel">玩家</p>
+          </div>
+          <div class="header-actions">
+            <button class="icon-button" id="musicToggle" type="button" aria-label="开关音乐" aria-pressed="true">
+              ♪
+            </button>
+            <button class="icon-button" id="menuButton" type="button" aria-label="返回菜单">≡</button>
+          </div>
+        </header>
+
+        <div class="game-layout">
+          <section class="board-panel" aria-label="2048 棋盘">
+            <div class="score-strip" aria-label="当前积分">
+              <div class="score-box">
+                <span>积分</span>
+                <strong id="scoreValue">0</strong>
+              </div>
+              <div class="score-box">
+                <span>最佳</span>
+                <strong id="bestValue">0</strong>
+              </div>
+              <div class="score-box">
+                <span>步数</span>
+                <strong id="movesValue">0</strong>
+              </div>
+            </div>
+
+            <div class="game-board" id="gameBoard" aria-live="polite"></div>
+
+            <div class="tool-row">
+              <button class="secondary-button" id="newGameButton" type="button">新局</button>
+              <button class="secondary-button" id="settleButton" type="button">结算</button>
+            </div>
+          </section>
+
+          <aside class="score-panel" aria-label="积分与排行">
+            <section class="panel stat-panel" aria-labelledby="scoreTableTitle">
+              <div class="panel-heading">
+                <p class="eyebrow">Score</p>
+                <h2 id="scoreTableTitle">游戏积分表</h2>
+              </div>
+              <div class="metric-grid">
+                <div class="metric-item">
+                  <span>最大方块</span>
+                  <strong id="maxTileValue">2</strong>
+                </div>
+                <div class="metric-item">
+                  <span>时间</span>
+                  <strong id="timeValue">00:00</strong>
+                </div>
+                <div class="metric-item">
+                  <span>局数</span>
+                  <strong id="gamesValue">0</strong>
+                </div>
+                <div class="metric-item">
+                  <span>胜局</span>
+                  <strong id="winsValue">0</strong>
+                </div>
+              </div>
+              <table class="score-table">
+                <thead>
+                  <tr>
+                    <th>玩家</th>
+                    <th>积分</th>
+                    <th>方块</th>
+                    <th>结果</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTable"></tbody>
+              </table>
+            </section>
+
+            <section class="panel stat-panel" aria-labelledby="rankTitle">
+              <div class="panel-heading">
+                <p class="eyebrow">Leaderboard</p>
+                <h2 id="rankTitle">排行榜</h2>
+              </div>
+              <div class="rank-list compact" id="gameLeaderboard"></div>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <div class="modal-backdrop hidden" id="resultModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <section class="modal-card">
+          <p class="eyebrow" id="modalKicker">Result</p>
+          <h2 id="modalTitle">本局结束</h2>
+          <p id="modalText" class="modal-text"></p>
+          <div class="modal-actions" id="modalActions"></div>
+        </section>
+      </div>
+    </main>
+
+    <script type="module" src="./assets/js/app.js"></script>
+  </body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "game2-2048",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node dev-server.cjs"
+  }
+}
